@@ -1,394 +1,347 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Lista de compras ARGO</title>
-<style>
-  :root{
-    --bg:#f9f9f9; --card:#fff; --text:#222; --muted:#666; --accent:#0077ff; --danger:#ff5b5b;
-    --shadow: 0 4px 12px rgba(0,0,0,0.08);
-  }
-  [data-theme="dark"]{
-    --bg:#0f1113; --card:#111317; --text:#e9eef2; --muted:#9aa3ad; --accent:#4da6ff; --danger:#ff7b7b;
-    --shadow: 0 6px 18px rgba(0,0,0,0.6);
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lista de compras ARGO</title>
+  <style>
+    :root {
+      --bg-color: #ffffff;
+      --text-color: #333;
+      --card-color: #f8f8f8;
+      --border-color: #ddd;
+      --accent-color: #0077cc;
+    }
 
-  html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;}
-  body{background:var(--bg); color:var(--text); padding:14px; -webkit-tap-highlight-color:transparent;}
-  header{display:flex;align-items:center;justify-content:center;gap:12px; flex-direction:column}
-  h1{margin:0;font-size:1.6rem;text-align:center}
-  .topbar{width:100%;display:flex;align-items:center;justify-content:space-between;margin:10px 0 14px;}
-  .top-left{display:flex;align-items:center;gap:8px}
-  .icon-btn{background:var(--card); border-radius:10px; padding:8px; box-shadow:var(--shadow); border:none; cursor:pointer;}
-  .icon-btn.big{padding:10px 14px;border-radius:12px;font-weight:600}
-  #reset{background:var(--danger); color:white; border:none; padding:10px 12px;border-radius:10px; box-shadow:var(--shadow); cursor:pointer}
-  #editBtn{background:var(--accent); color:white}
-  #darkToggle{background:transparent;border:1px solid rgba(0,0,0,0.08);padding:6px;border-radius:8px}
-  main{max-width:760px;margin:0 auto}
-  .sector{margin-top:14px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:10px;padding:8px 2px;border-bottom:1px solid rgba(0,0,0,0.06)}
-  .list{margin-top:8px}
-  .item{display:flex;align-items:center;justify-content:space-between;background:var(--card);padding:10px;border-radius:10px;margin-bottom:8px;box-shadow:var(--shadow)}
-  .left{display:flex;align-items:center;gap:10px;flex:1}
-  .cart-emoji{font-size:1.2rem;margin-right:6px}
-  .name{font-weight:600}
-  .controls{display:flex;align-items:center;gap:8px}
-  .qty{min-width:34px;text-align:center;font-weight:700}
-  .small{font-size:0.85rem;color:var(--muted)}
-  .buy{min-width:46px;text-align:right;font-weight:700}
-  button.small{background:var(--accent);color:#fff;border:none;padding:6px 8px;border-radius:8px;cursor:pointer}
-  button.icon{background:transparent;border:none;font-size:1.15rem;cursor:pointer}
-  .muted{color:var(--muted);font-size:0.88rem}
-  /* Editable styles */
-  .editable { outline: 2px dashed rgba(0,0,0,0.06); padding:2px 6px; border-radius:6px; }
-  /* Modal / tutorial */
-  .overlay{position:fixed; inset:0; display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.45); z-index:50}
-  .box{background:var(--card); color:var(--text); width:calc(100% - 40px); max-width:360px;border-radius:12px;padding:14px; box-shadow:var(--shadow); text-align:center}
-  .box h2{margin:0 0 8px}
-  .box p{margin:6px 0;color:var(--muted)}
-  .box .actions{margin-top:12px;display:flex;gap:10px;justify-content:center}
-  .btn-primary{background:var(--accent);color:white;padding:10px 12px;border-radius:10px;border:none;cursor:pointer}
-  .btn-secondary{background:transparent;border:1px solid rgba(0,0,0,0.08);padding:9px 12px;border-radius:10px;cursor:pointer}
-  /* Add product */
-  #addRow{display:flex;gap:8px;margin:10px 0 0}
-  input[type="text"], input[type="number"]{padding:8px;border-radius:8px;border:1px solid rgba(0,0,0,0.08);flex:1}
-  .trash{color:var(--danger); font-weight:700; cursor:pointer; padding:6px}
-  /* Responsive */
-  @media(min-width:720px){
-    body{padding:28px}
-    h1{font-size:2rem}
-  }
-</style>
+    [data-theme="dark"] {
+      --bg-color: #1c1c1c;
+      --text-color: #f2f2f2;
+      --card-color: #2a2a2a;
+      --border-color: #444;
+      --accent-color: #66aaff;
+    }
+
+    body {
+      background: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 40px;
+      margin-bottom: 20px;
+      font-size: 1.8em;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 1px solid var(--accent-color);
+      background: #fff;
+      color: var(--accent-color);
+      border-radius: 8px;
+      padding: 8px 14px;
+      cursor: pointer;
+      font-size: 0.95em;
+    }
+
+    button:hover {
+      background: var(--accent-color);
+      color: #fff;
+    }
+
+    .category {
+      background: var(--card-color);
+      margin-top: 20px;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .category h2 {
+      font-size: 1.2em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 10px 0;
+    }
+
+    .item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      padding: 8px 0;
+    }
+
+    .item:last-child {
+      border-bottom: none;
+    }
+
+    .item span {
+      flex: 1;
+    }
+
+    .qty-controls {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .qty-controls button {
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      background: var(--card-color);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      font-weight: bold;
+      font-size: 1em;
+    }
+
+    .qty-controls span {
+      width: 30px;
+      text-align: center;
+    }
+
+    .delete-btn {
+      color: red;
+      border: none;
+      background: transparent;
+      font-size: 1.2em;
+      cursor: pointer;
+    }
+
+    .footer-space {
+      height: 120px;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4);
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: var(--card-color);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      width: 80%;
+      max-width: 320px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .modal-content h3 {
+      margin-top: 0;
+    }
+
+    .modal-content button {
+      margin-top: 10px;
+    }
+
+  </style>
 </head>
 <body>
-<header>
-  <h1>🛒 Lista de compras ARGO</h1>
-  <div class="topbar" style="width:100%;max-width:760px">
-    <div class="top-left">
-      <button id="editBtn" class="icon-btn big">✏️ Editar</button>
-      <button id="reset" title="Vaciar lista">🗑 Vaciar lista</button>
-    </div>
-    <div style="display:flex;gap:8px;align-items:center">
-      <button id="darkToggle" class="icon-btn" title="Modo oscuro">🌙</button>
-      <button id="exportBtn" class="icon-btn" title="Exportar/Importar">📤</button>
+  <h1>Lista de compras ARGO</h1>
+
+  <div class="controls">
+    <button id="editBtn">✏️ Editar</button>
+    <button id="clearBtn">🗑️ Vaciar lista</button>
+    <button id="shareBtn">📤 Compartir</button>
+    <button id="copyBtn">📋 Copiar</button>
+    <button id="themeBtn">🌙</button>
+  </div>
+
+  <div id="listContainer"></div>
+  <div class="footer-space"></div>
+
+  <div id="tutorialModal" class="modal">
+    <div class="modal-content">
+      <h3>Bienvenido 👋</h3>
+      <p>Aquí cuentas cuántos productos tenés.<br>
+      A la izquierda se muestra cuánto te falta comprar.<br>
+      Usa el botón ✏️ para editar la lista.</p>
+      <button id="closeTutorial">Entendido</button>
     </div>
   </div>
-</header>
 
-<main id="app">
-  <div id="content"></div>
-</main>
-
-<!-- Tutorial modal -->
-<div id="tutorial" class="overlay" style="display:none">
-  <div class="box" role="dialog" aria-modal="true">
-    <h2>👋 Bienvenido</h2>
-    <p>• Aquí cuentas cuántos productos tenés con ➕ y ➖.</p>
-    <p>• La columna <strong>Comprar</strong> muestra cuánto falta según la cantidad ideal.</p>
-    <div class="actions">
-      <button class="btn-primary" id="gotIt">Entendido</button>
+  <div id="confirmModal" class="modal">
+    <div class="modal-content">
+      <h3>¿Vaciar toda la lista?</h3>
+      <button id="confirmYes">Sí, vaciar</button>
+      <button id="confirmNo">Cancelar</button>
     </div>
   </div>
-</div>
 
-<!-- Confirm modal (custom) -->
-<div id="confirmModal" class="overlay" style="display:none">
-  <div class="box">
-    <h2>⚠️ Confirmar</h2>
-    <p id="confirmText">¿Vaciar toda la lista?</p>
-    <div class="actions">
-      <button class="btn-secondary" onclick="closeConfirm()">Cancelar</button>
-      <button class="btn-primary" onclick="confirmReset()">Aceptar</button>
-    </div>
-  </div>
-</div>
+  <script>
+    const defaultList = {
+      "Despensa": [
+        { name: "Azúcar", ideal: 2 },
+        { name: "Aceite", ideal: 1 },
+        { name: "Sal fina", ideal: 1 },
+        { name: "Sal gruesa", ideal: 1 },
+        { name: "Vinagre", ideal: 1 },
+        { name: "Aceite de oliva", ideal: 1 },
+        { name: "Yerba Playadito", ideal: 1 },
+        { name: "Yerba Taragüi", ideal: 1 },
+        { name: "Edulcorante", ideal: 1 }
+      ],
+      "Desayuno": [
+        { name: "Café instantáneo Dolca", ideal: 2 },
+        { name: "Café molido tostado", ideal: 3 },
+        { name: "Café en cápsula (caja)", ideal: 2 },
+        { name: "Té común (100un)", ideal: 1 },
+        { name: "Té boldo (25)", ideal: 1 },
+        { name: "Té manzanilla (25)", ideal: 1 },
+        { name: "Mate cocido (25un)", ideal: 1 }
+      ],
+      "Heladera": [
+        { name: "Leche", ideal: 3 },
+        { name: "Manteca", ideal: 1 }
+      ],
+      "Baño y Limpieza": [
+        { name: "Jabón", ideal: 6 },
+        { name: "Esponja de cocina", ideal: 3 },
+        { name: "Virulana de algodón", ideal: 3 },
+        { name: "Papel de cocina", ideal: 6 },
+        { name: "Papel higiénico", ideal: 12 }
+      ],
+      "Aderesos": [
+        { name: "Mayonesa", ideal: 1 },
+        { name: "Mostaza", ideal: 1 },
+        { name: "Ketchup", ideal: 1 },
+        { name: "Chimichurri", ideal: 1 }
+      ],
+      "Snacks": [
+        { name: "9 de oro agridulce", ideal: 3 },
+        { name: "Galletas surtidas", ideal: 2 },
+        { name: "Galleta de agua", ideal: 3 }
+      ],
+      "Otros": [
+        { name: "Fósforos", ideal: 1 },
+        { name: "Escarbadientes", ideal: 1 }
+      ]
+    };
 
-<!-- Add item modal -->
-<div id="addModal" class="overlay" style="display:none">
-  <div class="box">
-    <h2>➕ Agregar producto</h2>
-    <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
-      <input id="newName" type="text" placeholder="Nombre del producto">
-      <input id="newIdeal" type="number" placeholder="Cantidad ideal (ej: 2)" min="0">
-      <select id="newCat">
-        <!-- categories injected by JS -->
-      </select>
-    </div>
-    <div class="actions" style="margin-top:12px">
-      <button class="btn-secondary" onclick="closeAdd()">Cancelar</button>
-      <button class="btn-primary" onclick="addProduct()">Agregar</button>
-    </div>
-  </div>
-</div>
+    let list = JSON.parse(localStorage.getItem("shoppingListARGO")) || defaultList;
+    let darkMode = localStorage.getItem("theme") === "dark";
 
-<script>
-/* ---------- Datos iniciales (categorías y productos) ---------- */
-const categorias = {
-  "🥛 Heladera": [
-    { name: "Leche", ideal: 3 },
-    { name: "Manteca", ideal: 1 },
-  ],
-  "🥫 Despensa": [
-    { name: "Azúcar", ideal: 2 },
-    { name: "Sal fina", ideal: 1 },
-    { name: "Sal gruesa", ideal: 1 },
-    { name: "Vinagre", ideal: 1 },
-    { name: "Aceite", ideal: 1 },
-    { name: "Aceite de oliva", ideal: 1 },
-  ],
-  "🍴 Aderezos": [
-    { name: "Mayonesa", ideal: 1 },
-    { name: "Mostaza", ideal: 1 },
-    { name: "Ketchup", ideal: 1 },
-    { name: "Chimichurri", ideal: 1 },
-  ],
-  "🍪 Desayuno y galletas": [
-    { name: "9 de oro agridulce", ideal: 3 },
-    { name: "Galletas surtidas", ideal: 2 },
-    { name: "Galleta de agua", ideal: 3 },
-    { name: "Café instantáneo Dolca", ideal: 2 },
-    { name: "Café molido tostado", ideal: 3 },
-    { name: "Café en cápsula (caja)", ideal: 2 },
-    { name: "Yerba Playadito", ideal: 1 },
-    { name: "Yerba Taragüi", ideal: 1 },
-    { name: "Edulcorante", ideal: 1 },
-    { name: "Té común (100un)", ideal: 1 },
-    { name: "Té boldo (25un)", ideal: 1 },
-    { name: "Té manzanilla (25un)", ideal: 1 },
-    { name: "Mate cocido (25un)", ideal: 1 },
-  ],
-  "🧽 Limpieza": [
-    { name: "Papel de cocina", ideal: 6 },
-    { name: "Papel higiénico", ideal: 12 },
-    { name: "Jabón", ideal: 6 },
-    { name: "Esponja de cocina", ideal: 3 },
-    { name: "Virulana de algodón", ideal: 3 },
-  ],
-  "🕯 Otros": [
-    { name: "Fósforos", ideal: 1 },
-    { name: "Escarbadientes", ideal: 1 },
-  ],
-};
+    if (darkMode) document.documentElement.setAttribute("data-theme", "dark");
 
-const STORAGE_KEY = "listaArgo_v2";
-const THEME_KEY = "argoTheme_v2";
-const TUTORIAL_KEY = "argoTutorialSeen_v2";
+    const container = document.getElementById("listContainer");
 
-/* ---------- Utilidades de almacenamiento ---------- */
-function saveData(arr){ localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
-function loadData(){
-  const s = localStorage.getItem(STORAGE_KEY);
-  if(!s){
-    // inicializar a partir de categorias
-    const arr = [];
-    Object.keys(categorias).forEach(cat=>{
-      categorias[cat].forEach(it=>{
-        arr.push({...it, have:0, cat});
+    function renderList() {
+      container.innerHTML = "";
+      Object.entries(list).forEach(([category, items]) => {
+        const div = document.createElement("div");
+        div.className = "category";
+        div.innerHTML = `<h2>🧺 ${category}</h2>`;
+        items.forEach((item, index) => {
+          const need = Math.max(item.ideal - (item.have || 0), 0);
+          const el = document.createElement("div");
+          el.className = "item";
+          el.innerHTML = `
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="font-weight:bold;width:40px;text-align:center;">${need}</span>
+              <span>${item.name}</span>
+            </div>
+            <div class="qty-controls">
+              <button onclick="changeQty('${category}',${index},-1)">-</button>
+              <span>${item.have || 0}</span>
+              <button onclick="changeQty('${category}',${index},1)">+</button>
+              <button class="delete-btn" onclick="deleteItem('${category}',${index})">✖️</button>
+            </div>`;
+          div.appendChild(el);
+        });
+        container.appendChild(div);
       });
-    });
-    saveData(arr);
-    return arr;
-  }
-  try { return JSON.parse(s); } catch(e){ localStorage.removeItem(STORAGE_KEY); return loadData(); }
-}
+    }
 
-/* ---------- Estado ---------- */
-let data = loadData();
-let editMode = false;
+    function changeQty(cat, i, d) {
+      list[cat][i].have = Math.max(0, (list[cat][i].have || 0) + d);
+      saveList();
+    }
 
-/* ---------- Render ---------- */
-function render(){
-  const root = document.getElementById("content");
-  root.innerHTML = "";
-  Object.keys(categorias).forEach(cat=>{
-    const sector = document.createElement("div");
-    sector.className = "sector";
-    sector.textContent = cat;
-    root.appendChild(sector);
-
-    const listDiv = document.createElement("div");
-    listDiv.className = "list";
-    const items = data.filter(d=>d.cat===cat);
-    items.forEach((item, idx)=> {
-      const globalIndex = data.indexOf(item);
-      const buy = Math.max(0, (Number(item.ideal)||0) - (Number(item.have)||0));
-      const itemDiv = document.createElement("div");
-      itemDiv.className = "item";
-      itemDiv.innerHTML = `
-        <div class="left">
-          <div class="cart-emoji">🛒</div>
-          <div style="display:flex;flex-direction:column">
-            <div class="name" ${editMode ? 'contenteditable="true" data-field="name" data-idx="'+globalIndex+'"' : ''}>${escapeHtml(item.name)}</div>
-            <div class="small muted">Ideal: <span ${editMode ? 'contenteditable="true" data-field="ideal" data-idx="'+globalIndex+'"' : ''}>${escapeHtml(String(item.ideal))}</span></div>
-          </div>
-        </div>
-        <div class="controls">
-          <button class="small" onclick="decrement(${globalIndex})">−</button>
-          <div class="qty">${escapeHtml(String(item.have))}</div>
-          <button class="small" onclick="increment(${globalIndex})">+</button>
-          <div class="buy">${buy>0?buy:'✔️'}</div>
-          ${editMode ? '<div class="trash" title="Eliminar" onclick="removeItem('+globalIndex+')">✖</div>' : ''}
-        </div>
-      `;
-      listDiv.appendChild(itemDiv);
-      // attach edit listeners if editMode
-      if(editMode){
-        // name and ideal fields are contenteditable: listen on input/blur
-        const nameEl = itemDiv.querySelector('[data-field="name"]');
-        const idealEl = itemDiv.querySelector('[data-field="ideal"]');
-        if(nameEl){
-          nameEl.classList.add('editable');
-          nameEl.addEventListener('input', e=>{
-            const i = Number(nameEl.dataset.idx);
-            data[i].name = nameEl.innerText.trim();
-            saveData(data);
-          });
-        }
-        if(idealEl){
-          idealEl.classList.add('editable');
-          idealEl.addEventListener('input', e=>{
-            const i = Number(idealEl.dataset.idx);
-            let v = idealEl.innerText.replace(/[^0-9]/g,'');
-            if(v==='') v='0';
-            data[i].ideal = Number(v);
-            idealEl.innerText = v;
-            saveData(data);
-          });
-        }
+    function deleteItem(cat, i) {
+      if (confirm(`¿Eliminar ${list[cat][i].name}?`)) {
+        list[cat].splice(i, 1);
+        saveList();
       }
-    });
-    root.appendChild(listDiv);
-  });
+    }
 
-  // show add product controls if editMode
-  if(editMode){
-    const addBar = document.createElement("div");
-    addBar.id = "addRow";
-    addBar.innerHTML = `
-      <input id="addName" type="text" placeholder="Nuevo producto (ej: Azúcar)">
-      <input id="addIdeal" type="number" min="0" placeholder="Ideal">
-      <select id="addCat"></select>
-      <button class="btn-primary" id="addBtn">Agregar</button>
-    `;
-    root.appendChild(addBar);
-    // populate categories select
-    const sel = document.getElementById("addCat");
-    sel.innerHTML = "";
-    Object.keys(categorias).forEach(c=> sel.innerHTML += `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`);
-    document.getElementById("addBtn").addEventListener("click", ()=>{
-      const name = document.getElementById("addName").value.trim();
-      const ideal = Number(document.getElementById("addIdeal").value) || 0;
-      const cat = document.getElementById("addCat").value || Object.keys(categorias)[0];
-      if(!name) { alert("Ingresá nombre del producto."); return; }
-      data.push({name, ideal, have:0, cat});
-      saveData(data); render();
-    });
-  }
-}
+    function saveList() {
+      localStorage.setItem("shoppingListARGO", JSON.stringify(list));
+      renderList();
+    }
 
-/* ---------- helpers ---------- */
-function escapeHtml(s){ return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+    document.getElementById("clearBtn").onclick = () => {
+      document.getElementById("confirmModal").style.display = "flex";
+    };
 
-function increment(i){ data[i].have = (Number(data[i].have)||0) + 1; saveData(data); render(); }
-function decrement(i){ data[i].have = Math.max(0, (Number(data[i].have)||0) - 1); saveData(data); render(); }
-function removeItem(i){ if(confirm("Eliminar producto?")){ data.splice(i,1); saveData(data); render(); } }
+    document.getElementById("confirmYes").onclick = () => {
+      list = JSON.parse(JSON.stringify(defaultList));
+      saveList();
+      document.getElementById("confirmModal").style.display = "none";
+    };
 
-/* ---------- Edit mode toggle ---------- */
-document.getElementById("editBtn").addEventListener("click", ()=>{
-  editMode = !editMode;
-  document.getElementById("editBtn").textContent = editMode ? "💾 Salir edición" : "✏️ Editar";
-  render();
-});
+    document.getElementById("confirmNo").onclick = () => {
+      document.getElementById("confirmModal").style.display = "none";
+    };
 
-/* ---------- Reset / confirm modal custom ---------- */
-document.getElementById("reset").addEventListener("click", ()=>{
-  showConfirm("¿Vaciar toda la lista?");
-});
-function showConfirm(text){
-  document.getElementById("confirmText").innerText = text;
-  document.getElementById("confirmModal").style.display = "flex";
-}
-function closeConfirm(){ document.getElementById("confirmModal").style.display = "none"; }
-function confirmReset(){
-  data.forEach(it=> it.have = 0);
-  saveData(data);
-  render();
-  closeConfirm();
-}
+    document.getElementById("themeBtn").onclick = () => {
+      darkMode = !darkMode;
+      if (darkMode) document.documentElement.setAttribute("data-theme", "dark");
+      else document.documentElement.removeAttribute("data-theme");
+      localStorage.setItem("theme", darkMode ? "dark" : "light");
+    };
 
-/* ---------- Tutorial ---------- */
-function showTutorialIfNeeded(){
-  if(!localStorage.getItem(TUTORIAL_KEY)){
-    document.getElementById("tutorial").style.display = "flex";
-  }
-}
-document.getElementById("gotIt").addEventListener("click", ()=>{
-  localStorage.setItem(TUTORIAL_KEY, "1");
-  document.getElementById("tutorial").style.display = "none";
-});
+    document.getElementById("shareBtn").onclick = () => {
+      const text = buildTextList();
+      const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+      window.open(url, "_blank");
+    };
 
-/* ---------- Dark mode toggle ---------- */
-const themeBtn = document.getElementById("darkToggle");
-function applyTheme(t){
-  if(t==='dark'){ document.documentElement.setAttribute('data-theme','dark'); themeBtn.textContent='🌙'; }
-  else { document.documentElement.removeAttribute('data-theme'); themeBtn.textContent='🌙'; }
-}
-themeBtn.addEventListener("click", ()=>{
-  const cur = localStorage.getItem(THEME_KEY) || 'light';
-  const nxt = cur==='light' ? 'dark' : 'light';
-  localStorage.setItem(THEME_KEY, nxt);
-  applyTheme(nxt);
-});
-(function initTheme(){
-  const t = localStorage.getItem(THEME_KEY) || 'light';
-  applyTheme(t);
-})();
+    document.getElementById("copyBtn").onclick = () => {
+      navigator.clipboard.writeText(buildTextList());
+      alert("Lista copiada al portapapeles ✅");
+    };
 
-/* ---------- Export / Import JSON (small utility) ---------- */
-document.getElementById("exportBtn").addEventListener("click", ()=>{
-  const action = prompt("Escribe 'export' para descargar JSON, 'import' para pegar JSON y reemplazar:");
-  if(!action) return;
-  if(action.toLowerCase()==='export'){
-    const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'listaArgo.json';
-    a.click();
-    URL.revokeObjectURL(a.href);
-  } else if(action.toLowerCase()==='import'){
-    const txt = prompt("Pega aquí el JSON para importar (sobrescribe datos actuales):");
-    try{
-      const parsed = JSON.parse(txt);
-      if(Array.isArray(parsed)){ data = parsed; saveData(data); render(); alert("Importado!"); }
-      else alert("JSON inválido.");
-    }catch(e){ alert("JSON inválido."); }
-  }
-});
+    function buildTextList() {
+      let text = "🛒 Lista de compras ARGO:\n\n";
+      Object.entries(list).forEach(([cat, items]) => {
+        text += `📦 ${cat}:\n`;
+        items.forEach(i => {
+          const need = Math.max(i.ideal - (i.have || 0), 0);
+          text += ` - ${i.name}: comprar ${need}\n`;
+        });
+        text += "\n";
+      });
+      return text;
+    }
 
-/* ---------- Add modal (alternate) ---------- */
-function openAddModal(){ document.getElementById("addModal").style.display="flex"; }
-function closeAdd(){ document.getElementById("addModal").style.display="none"; }
-function addProduct(){
-  const name = document.getElementById("newName").value.trim();
-  const ideal = Number(document.getElementById("newIdeal").value) || 0;
-  const cat = document.getElementById("newCat").value || Object.keys(categorias)[0];
-  if(!name){ alert("Ingresá nombre"); return; }
-  data.push({name, ideal, have:0, cat});
-  saveData(data); render(); closeAdd();
-}
+    document.getElementById("closeTutorial").onclick = () => {
+      document.getElementById("tutorialModal").style.display = "none";
+      localStorage.setItem("tutorialShown", "yes");
+    };
 
-/* ---------- initialize add modal category options ---------- */
-(function populateAddModalCats(){
-  const sel = document.getElementById("newCat");
-  Object.keys(categorias).forEach(c => sel.innerHTML += `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`);
-})();
+    if (!localStorage.getItem("tutorialShown"))
+      document.getElementById("tutorialModal").style.display = "flex";
 
-/* ---------- init ---------- */
-render();
-showTutorialIfNeeded();
-
-/* save on unload just in case */
-window.addEventListener('beforeunload', ()=> saveData(data));
-</script>
+    renderList();
+  </script>
 </body>
 </html>
