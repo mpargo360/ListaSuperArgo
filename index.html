@@ -220,7 +220,7 @@
         { name: "Papel de cocina", ideal: 6 },
         { name: "Papel higiénico", ideal: 12 }
       ],
-      "Aderesos": [
+      "Aderezos": [
         { name: "Mayonesa", ideal: 1 },
         { name: "Mostaza", ideal: 1 },
         { name: "Ketchup", ideal: 1 },
@@ -239,9 +239,7 @@
 
     let list = JSON.parse(localStorage.getItem("shoppingListARGO")) || defaultList;
     let darkMode = localStorage.getItem("theme") === "dark";
-
     if (darkMode) document.documentElement.setAttribute("data-theme", "dark");
-
     const container = document.getElementById("listContainer");
 
     function renderList() {
@@ -256,7 +254,8 @@
           el.className = "item";
           el.innerHTML = `
             <div style="display:flex;align-items:center;gap:10px;">
-              <span style="font-weight:bold;width:40px;text-align:center;">${need}</span>
+              <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" width="22">
+              <span style="font-weight:bold;width:30px;text-align:center;">${need}</span>
               <span>${item.name}</span>
             </div>
             <div class="qty-controls">
@@ -317,7 +316,6 @@
 
     document.getElementById("copyBtn").onclick = () => {
       navigator.clipboard.writeText(buildTextList());
-      alert("Lista copiada al portapapeles ✅");
     };
 
     function buildTextList() {
