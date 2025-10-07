@@ -25,7 +25,8 @@
   #reset{background:var(--danger); color:white; border:none; padding:10px 12px;border-radius:10px; box-shadow:var(--shadow); cursor:pointer}
   #editBtn{background:var(--accent); color:white}
   #darkToggle{background:transparent;border:1px solid rgba(0,0,0,0.08);padding:6px;border-radius:8px}
-  main{max-width:760px;margin:0 auto; margin-bottom:30px;} /* más margen inferior */
+  #shareBtn{background:#25D366;color:white;border:none;padding:10px 12px;border-radius:10px;cursor:pointer;box-shadow:var(--shadow);}
+  main{max-width:760px;margin:0 auto; margin-bottom:30px;} 
   .sector{margin-top:14px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:10px;padding:8px 2px;border-bottom:1px solid rgba(0,0,0,0.06)}
   .list{margin-top:8px}
   .item{display:flex;align-items:center;justify-content:space-between;background:var(--card);padding:10px;border-radius:10px;margin-bottom:8px;box-shadow:var(--shadow)}
@@ -52,11 +53,11 @@
   .overlay{position:fixed; inset:0; display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.45); z-index:50}
   .box{background:var(--card); color:var(--text); width:calc(100% - 40px); max-width:360px;border-radius:12px;padding:14px; box-shadow:var(--shadow); text-align:center}
   .box h2{margin:0 0 8px}
-  .box p{margin:6px 0;color:var(--muted)}
+  .box p{margin:6px 0;color:var(--muted); text-align:left; line-height:1.4;}
   .box .actions{margin-top:12px;display:flex;gap:10px;justify-content:center}
   .btn-primary{background:var(--accent);color:white;padding:10px 12px;border-radius:10px;border:none;cursor:pointer}
   .btn-secondary{background:transparent;border:1px solid rgba(0,0,0,0.08);padding:9px 12px;border-radius:10px;cursor:pointer}
-  #addRow{display:flex;flex-direction:column;gap:8px;margin:10px 0 0} /* ahora columna para selector abajo */
+  #addRow{display:flex;flex-direction:column;gap:8px;margin:10px 0 0} 
   input[type="text"], input[type="number"]{padding:8px;border-radius:8px;border:1px solid rgba(0,0,0,0.08);flex:1}
   select{padding:6px;border-radius:8px;border:1px solid rgba(0,0,0,0.08)}
   .trash{color:var(--danger); font-weight:700; cursor:pointer; padding:6px}
@@ -76,7 +77,7 @@
     </div>
     <div style="display:flex;gap:8px;align-items:center">
       <button id="darkToggle" class="icon-btn" title="Modo oscuro">🌙</button>
-      <button id="exportBtn" class="icon-btn" title="Exportar/Importar">📤</button>
+      <button id="shareBtn" title="Compartir en WhatsApp">💬</button>
     </div>
   </div>
 </header>
@@ -88,9 +89,11 @@
 <!-- Tutorial modal -->
 <div id="tutorial" class="overlay" style="display:none">
   <div class="box" role="dialog" aria-modal="true">
-    <h2>👋 Bienvenido</h2>
-    <p>• Aquí cuentas cuántos productos tenés con ➕ y ➖.</p>
-    <p>• La columna <strong>Comprar</strong> muestra cuánto falta según la cantidad ideal.</p>
+    <h2>👋 Bienvenido a Lista ARGO</h2>
+    <p>Esta página sirve para organizar tus compras de manera simple y rápida.</p>
+    <p>Los botones <strong>+</</strong> y <strong>-</strong> sirven para controlar el stock actual de cada producto.</p>
+    <p>La cantidad que aparece al lado del carrito de compras indica lo que se debe comprar.</p>
+    <p>Puedes <strong>editar, agregar o cambiar las cantidades</strong> de los productos según tus necesidades.</p>
     <div class="actions">
       <button class="btn-primary" id="gotIt">Entendido</button>
     </div>
@@ -105,22 +108,6 @@
     <div class="actions">
       <button class="btn-secondary" onclick="closeConfirm()">Cancelar</button>
       <button class="btn-primary" onclick="confirmReset()">Aceptar</button>
-    </div>
-  </div>
-</div>
-
-<!-- Add item modal -->
-<div id="addModal" class="overlay" style="display:none">
-  <div class="box">
-    <h2>➕ Agregar producto</h2>
-    <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
-      <input id="newName" type="text" placeholder="Nombre del producto">
-      <input id="newIdeal" type="number" placeholder="Cantidad ideal (ej: 2)" min="0">
-      <select id="newCat"></select>
-    </div>
-    <div class="actions" style="margin-top:12px">
-      <button class="btn-secondary" onclick="closeAdd()">Cancelar</button>
-      <button class="btn-primary" onclick="addProduct()">Agregar</button>
     </div>
   </div>
 </div>
@@ -167,7 +154,7 @@ const categorias = {
     { name: "Esponja de cocina", ideal: 3 },
     { name: "Virulana de algodón", ideal: 3 },
   ],
-  "🧺 Otros": [ // cambiado icono a cesta
+  "🧺 Otros": [ 
     { name: "Fósforos", ideal: 1 },
     { name: "Escarbadientes", ideal: 1 },
   ],
@@ -198,6 +185,8 @@ function render(){
   const root = document.getElementById("content");
   root.innerHTML = "";
   Object.keys(categorias).forEach(cat=>{
+    const items = data.filter(d=>d.cat===cat);
+    if(items.length===0) return;
     const sector = document.createElement("div");
     sector.className = "sector";
     sector.textContent = cat;
@@ -205,7 +194,6 @@ function render(){
 
     const listDiv = document.createElement("div");
     listDiv.className = "list";
-    const items = data.filter(d=>d.cat===cat);
     items.forEach((item)=>{
       const globalIndex = data.indexOf(item);
       const buy = Math.max(0, (Number(item.ideal)||0) - (Number(item.have)||0));
@@ -327,10 +315,11 @@ themeBtn.addEventListener("click", ()=>{
 });
 applyTheme(localStorage.getItem(THEME_KEY) || 'light');
 
-const exportBtn = document.getElementById("exportBtn");
-exportBtn.addEventListener("click", ()=>{
-  const str = JSON.stringify(data);
-  navigator.clipboard.writeText(str).then(()=> alert("Datos copiados al portapapeles ✅"));
+const shareBtn = document.getElementById("shareBtn");
+shareBtn.addEventListener("click", ()=>{
+  const lines = data.map(d=>`${d.cat} - ${d.name} (Ideal: ${d.ideal}) - Actual: ${d.have}`);
+  const text = encodeURIComponent("🛒 Lista de compras:\n" + lines.join("\n"));
+  window.open(`https://wa.me/?text=${text}`,'_blank');
 });
 
 render();
