@@ -15,18 +15,18 @@
   }
 
   html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;}
-  body{background:var(--bg); color:var(--text); padding:60px 14px; -webkit-tap-highlight-color:transparent;} /* margen arriba y abajo aumentado */
+  body{background:var(--bg); color:var(--text); padding:60px 14px; -webkit-tap-highlight-color:transparent;}
   header{display:flex;align-items:center;justify-content:center;gap:12px; flex-direction:column; margin-bottom:20px;}
   h1{margin:0;font-size:1.6rem;text-align:center}
   .topbar{width:100%;display:flex;align-items:center;justify-content:space-between;margin:10px 0 14px;}
   .top-left{display:flex;align-items:center;gap:8px}
   .icon-btn{background:var(--card); border-radius:10px; padding:8px; box-shadow:var(--shadow); border:none; cursor:pointer;}
   .icon-btn.big{padding:10px 14px;border-radius:12px;font-weight:600}
-  #reset{background:var(--card); color:var(--text); border:1px solid rgba(0,0,0,0.08); padding:10px 12px;border-radius:10px; box-shadow:var(--shadow); cursor:pointer} /* blanco */
-  #editBtn{background:var(--card); color:var(--text); border:1px solid rgba(0,0,0,0.08); box-shadow:var(--shadow);} /* blanco */
+  #reset{background:var(--card); color:var(--text); border:1px solid rgba(0,0,0,0.08); padding:10px 12px;border-radius:10px; box-shadow:var(--shadow); cursor:pointer} 
+  #editBtn{background:var(--card); color:var(--text); border:1px solid rgba(0,0,0,0.08); box-shadow:var(--shadow);} 
   #darkToggle{background:transparent;border:1px solid rgba(0,0,0,0.08);padding:6px;border-radius:8px}
-  #shareBtn{background:var(--card); color:var(--text); border:1px solid rgba(0,0,0,0.08); padding:10px 12px; border-radius:10px; cursor:pointer; box-shadow:var(--shadow);} /* blanco */
-  main{max-width:760px;margin:0 auto; margin-bottom:60px;}  /* margen inferior aumentado */
+  #shareBtn{background:var(--card); color:var(--text); border:1px solid rgba(0,0,0,0.08); padding:10px 12px; border-radius:10px; cursor:pointer; box-shadow:var(--shadow);} 
+  main{max-width:760px;margin:0 auto; margin-bottom:150px;}  /* margen inferior aumentado para más espacio */
   .sector{margin-top:14px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:10px;padding:8px 2px;border-bottom:1px solid rgba(0,0,0,0.06)}
   .list{margin-top:8px}
   .item{display:flex;align-items:center;justify-content:space-between;background:var(--card);padding:10px;border-radius:10px;margin-bottom:8px;box-shadow:var(--shadow)}
@@ -65,6 +65,10 @@
     body{padding:60px 28px}
     h1{font-size:2rem}
   }
+
+  /* Centramos el texto del modal de confirmación */
+  #confirmModal .box p { text-align:center; }
+
 </style>
 </head>
 <body>
@@ -314,6 +318,21 @@ themeBtn.addEventListener("click", ()=>{
   applyTheme(nxt);
 });
 applyTheme(localStorage.getItem(THEME_KEY)||'light');
+
+document.getElementById("shareBtn").addEventListener("click", ()=>{
+  let msg = "";
+  Object.keys(categorias).forEach(cat=>{
+    const items = data.filter(d=>d.cat===cat && (Number(d.ideal)-Number(d.have))>0);
+    if(items.length===0) return;
+    msg += `"${cat}"\n`;
+    items.forEach(it=>{
+      const buy = Math.max(0, Number(it.ideal)-Number(it.have));
+      msg += `*"${buy}" ${it.name}\n`;
+    });
+  });
+  const url = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+  window.open(url,"_blank");
+});
 
 render();
 showTutorialIfNeeded();
