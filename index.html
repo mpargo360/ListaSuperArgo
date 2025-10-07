@@ -1,323 +1,245 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Lista de Compras ARGO</title>
-<style>
-  body {
-    font-family: 'Segoe UI', sans-serif;
-    background-color: #f5f5f5;
-    color: #333;
-    margin: 0;
-    padding: 0 0 80px 0;
-  }
-
-  h1 {
-    text-align: center;
-    margin-top: 40px;
-    margin-bottom: 10px;
-    font-size: 1.8em;
-  }
-
-  .button-bar {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 20px;
-  }
-
-  button {
-    border: 1px solid #0078d7;
-    background-color: white;
-    color: #0078d7;
-    border-radius: 8px;
-    padding: 6px 12px;
-    font-size: 0.9em;
-    cursor: pointer;
-  }
-
-  button:hover {
-    background-color: #0078d7;
-    color: white;
-  }
-
-  .category {
-    background-color: white;
-    border-radius: 12px;
-    margin: 10px 15px;
-    padding: 10px 12px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-
-  .category h2 {
-    margin: 0 0 10px 0;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 1.1em;
-  }
-
-  .item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 6px 0;
-    border-bottom: 1px solid #e0e0e0;
-  }
-
-  .item:last-child {
-    border-bottom: none;
-  }
-
-  .item-left {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .qty {
-    width: 22px;
-    text-align: center;
-    font-weight: bold;
-  }
-
-  .controls {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .controls button {
-    border: 1px solid #ccc;
-    background: #fafafa;
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    font-size: 1em;
-    font-weight: bold;
-  }
-
-  .delete-btn {
-    color: red;
-    font-size: 1.2em;
-    display: none;
-  }
-
-  .edit-mode .delete-btn {
-    display: inline;
-  }
-
-  .modal {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.5);
-    display: none;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .modal-content {
-    background: white;
-    border-radius: 10px;
-    padding: 20px;
-    text-align: center;
-    width: 80%;
-    max-width: 300px;
-  }
-
-  .modal-content button {
-    margin-top: 10px;
-  }
-
-  .footer-space {
-    height: 100px;
-  }
-
-  #newItemCategory {
-    display: block;
-    width: 100%;
-    margin-top: 8px;
-    padding: 6px;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lista de compras ARGO</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 1.8em;
+    }
+    .controls {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    button {
+      border: 1px solid #333;
+      background-color: #fff;
+      color: #333;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 4px;
+      font-size: 0.9em;
+    }
+    button:hover {
+      background-color: #eee;
+    }
+    .category {
+      margin-top: 25px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 10px;
+    }
+    .category h2 {
+      display: flex;
+      align-items: center;
+      font-size: 1.1em;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 6px;
+    }
+    .category h2 img {
+      width: 22px;
+      margin-right: 8px;
+    }
+    .product {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #eee;
+      padding: 6px 0;
+    }
+    .left-side {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .left-side img {
+      width: 22px;
+    }
+    .product span {
+      font-weight: bold;
+    }
+    .ideal {
+      font-size: 0.8em;
+      color: #999;
+      display: none; /* oculto salvo edición */
+    }
+    .editing .ideal {
+      display: block;
+    }
+    .footer-space {
+      height: 80px;
+    }
+  </style>
 </head>
 <body>
-  <h1>Lista de Compras ARGO</h1>
+  <h1>Lista de compras ARGO</h1>
 
-  <div class="button-bar">
+  <div class="controls">
     <button id="editBtn">✏️ Editar</button>
-    <button id="clearBtn">🗑️ Vaciar lista</button>
     <button id="shareBtn">📤 Compartir</button>
     <button id="copyBtn">📋 Copiar</button>
   </div>
 
-  <div id="list"></div>
+  <div id="listContainer"></div>
   <div class="footer-space"></div>
 
-  <div id="confirmModal" class="modal">
-    <div class="modal-content">
-      <h3>¿Vaciar toda la lista?</h3>
-      <button id="confirmYes">Sí, vaciar</button>
-      <button id="confirmNo">Cancelar</button>
-    </div>
-  </div>
+  <script>
+    const categories = {
+      "Despensa": {
+        icon: "https://cdn-icons-png.flaticon.com/512/2331/2331716.png",
+        items: [
+          { name: "Azúcar", have: 0, ideal: 2 },
+          { name: "Aceite", have: 0, ideal: 1 },
+          { name: "Sal fina", have: 0, ideal: 1 },
+          { name: "Sal gruesa", have: 0, ideal: 1 },
+          { name: "Vinagre", have: 0, ideal: 1 },
+          { name: "Aceite de oliva", have: 0, ideal: 1 },
+          { name: "Yerba Playadito", have: 0, ideal: 1 },
+          { name: "Yerba Taragüi", have: 0, ideal: 1 },
+          { name: "Edulcorante", have: 0, ideal: 1 }
+        ]
+      },
+      "Desayuno": {
+        icon: "https://cdn-icons-png.flaticon.com/512/3450/3450437.png",
+        items: [
+          { name: "Café instantáneo Dolca", have: 0, ideal: 2 },
+          { name: "Café molido tostado", have: 0, ideal: 3 },
+          { name: "Café en cápsula (caja)", have: 0, ideal: 2 },
+          { name: "Té común (100un)", have: 0, ideal: 1 },
+          { name: "Té boldo (25)", have: 0, ideal: 1 },
+          { name: "Té manzanilla (25)", have: 0, ideal: 1 },
+          { name: "Mate cocido (25un)", have: 0, ideal: 1 },
+          { name: "Leche", have: 0, ideal: 3 },
+          { name: "Manteca", have: 0, ideal: 1 }
+        ]
+      },
+      "Aderesos": {
+        icon: "https://cdn-icons-png.flaticon.com/512/1046/1046784.png",
+        items: [
+          { name: "Mayonesa", have: 0, ideal: 1 },
+          { name: "Mostaza", have: 0, ideal: 1 },
+          { name: "Ketchup", have: 0, ideal: 1 },
+          { name: "Chimichurri", have: 0, ideal: 1 }
+        ]
+      },
+      "Limpieza": {
+        icon: "https://cdn-icons-png.flaticon.com/512/1046/1046857.png",
+        items: [
+          { name: "Jabón", have: 0, ideal: 6 },
+          { name: "Esponja de cocina", have: 0, ideal: 3 },
+          { name: "Virulana de algodón", have: 0, ideal: 3 },
+          { name: "Papel de cocina", have: 0, ideal: 6 },
+          { name: "Papel higiénico", have: 0, ideal: 12 }
+        ]
+      },
+      "Snacks": {
+        icon: "https://cdn-icons-png.flaticon.com/512/3075/3075977.png",
+        items: [
+          { name: "9 de oro agridulce", have: 0, ideal: 3 },
+          { name: "Galletas surtidas", have: 0, ideal: 2 },
+          { name: "Galleta de agua", have: 0, ideal: 3 }
+        ]
+      },
+      "Otros": {
+        icon: "https://cdn-icons-png.flaticon.com/512/3514/3514579.png",
+        items: [
+          { name: "Fósforos", have: 0, ideal: 1 },
+          { name: "Escarbadientes", have: 0, ideal: 1 }
+        ]
+      }
+    };
 
-<script>
-const defaultList = {
-  "Heladera": [
-    { name: "Leche", ideal: 3 },
-    { name: "Manteca", ideal: 1 }
-  ],
-  "Despensa": [
-    { name: "Azúcar", ideal: 2 },
-    { name: "Aceite", ideal: 1 },
-    { name: "Sal fina", ideal: 1 },
-    { name: "Sal gruesa", ideal: 1 },
-    { name: "Vinagre", ideal: 1 },
-    { name: "Aceite de oliva", ideal: 1 },
-    { name: "Yerba Playadito", ideal: 1 },
-    { name: "Yerba Taragüi", ideal: 1 },
-    { name: "Edulcorante", ideal: 1 }
-  ],
-  "Aderezos": [
-    { name: "Mayonesa", ideal: 1 },
-    { name: "Mostaza", ideal: 1 },
-    { name: "Ketchup", ideal: 1 },
-    { name: "Chimichurri", ideal: 1 }
-  ],
-  "Desayuno y galletas": [
-    { name: "Café instantáneo Dolca", ideal: 2 },
-    { name: "Café molido tostado", ideal: 3 },
-    { name: "Café en cápsula (caja)", ideal: 2 },
-    { name: "Té común (100un)", ideal: 1 },
-    { name: "Té boldo (25)", ideal: 1 },
-    { name: "Té manzanilla (25)", ideal: 1 },
-    { name: "Mate cocido (25un)", ideal: 1 },
-    { name: "9 de oro agridulce", ideal: 3 },
-    { name: "Galletas surtidas", ideal: 2 },
-    { name: "Galleta de agua", ideal: 3 }
-  ],
-  "Limpieza": [
-    { name: "Jabón", ideal: 6 },
-    { name: "Esponja de cocina", ideal: 3 },
-    { name: "Virulana de algodón", ideal: 3 },
-    { name: "Papel de cocina", ideal: 6 },
-    { name: "Papel higiénico", ideal: 12 }
-  ],
-  "Otros": [
-    { name: "Fósforos", ideal: 1 },
-    { name: "Escarbadientes", ideal: 1 }
-  ]
-};
+    let editing = false;
+    const container = document.getElementById("listContainer");
 
-let list = JSON.parse(localStorage.getItem("shoppingListARGO")) || defaultList;
-let editMode = false;
+    function renderList() {
+      container.innerHTML = "";
+      for (let [cat, data] of Object.entries(categories)) {
+        const catDiv = document.createElement("div");
+        catDiv.className = "category";
+        catDiv.innerHTML = `<h2><img src="${data.icon}"/>${cat}</h2>`;
+        data.items.forEach((item) => {
+          const missing = Math.max(item.ideal - item.have, 0);
+          const prodDiv = document.createElement("div");
+          prodDiv.className = "product" + (editing ? " editing" : "");
+          prodDiv.innerHTML = `
+            <div class="left-side">
+              <img src="https://cdn-icons-png.flaticon.com/512/1170/1170627.png"/>
+              <span>${missing}</span>
+              <span>${item.name}</span>
+            </div>
+            <div>
+              <button onclick="updateItem('${cat}','${item.name}',-1)">➖</button>
+              <span>${item.have}</span>
+              <button onclick="updateItem('${cat}','${item.name}',1)">➕</button>
+              <div class="ideal">Ideal: ${item.ideal}</div>
+            </div>`;
+          catDiv.appendChild(prodDiv);
+        });
+        container.appendChild(catDiv);
+      }
+    }
 
-const listDiv = document.getElementById("list");
-const confirmModal = document.getElementById("confirmModal");
+    function updateItem(cat, name, diff) {
+      const item = categories[cat].items.find(i => i.name === name);
+      item.have = Math.max(0, item.have + diff);
+      renderList();
+      saveData();
+    }
 
-function renderList() {
-  listDiv.innerHTML = "";
-  Object.entries(list).forEach(([category, items]) => {
-    const section = document.createElement("div");
-    section.className = "category";
-    section.innerHTML = `<h2>🧺 ${category}</h2>`;
-    items.forEach((item, i) => {
-      const need = Math.max(item.ideal - (item.have || 0), 0);
-      const row = document.createElement("div");
-      row.className = "item";
-      row.innerHTML = `
-        <div class="item-left">
-          <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" width="20">
-          <span class="qty">${need}</span>
-          <span>${item.name}</span>
-        </div>
-        <div class="controls">
-          <button onclick="changeQty('${category}',${i},-1)">-</button>
-          <span>${item.have || 0}</span>
-          <button onclick="changeQty('${category}',${i},1)">+</button>
-          <span class="delete-btn" onclick="deleteItem('${category}',${i})">✖️</span>
-        </div>`;
-      section.appendChild(row);
-    });
-    listDiv.appendChild(section);
-  });
-}
+    function saveData() {
+      localStorage.setItem("shoppingList", JSON.stringify(categories));
+    }
 
-function changeQty(cat, i, d) {
-  list[cat][i].have = Math.max(0, (list[cat][i].have || 0) + d);
-  saveList();
-}
+    function loadData() {
+      const data = localStorage.getItem("shoppingList");
+      if (data) Object.assign(categories, JSON.parse(data));
+    }
 
-function deleteItem(cat, i) {
-  const modal = document.createElement("div");
-  modal.className = "modal";
-  modal.style.display = "flex";
-  modal.innerHTML = `
-    <div class="modal-content">
-      <h3>¿Eliminar "${list[cat][i].name}"?</h3>
-      <button id="yes">Eliminar</button>
-      <button id="no">Cancelar</button>
-    </div>`;
-  document.body.appendChild(modal);
-  modal.querySelector("#yes").onclick = () => {
-    list[cat].splice(i, 1);
-    saveList();
-    document.body.removeChild(modal);
-  };
-  modal.querySelector("#no").onclick = () => {
-    document.body.removeChild(modal);
-  };
-}
+    document.getElementById("editBtn").onclick = () => {
+      editing = !editing;
+      renderList();
+    };
 
-function saveList() {
-  localStorage.setItem("shoppingListARGO", JSON.stringify(list));
-  renderList();
-}
+    document.getElementById("copyBtn").onclick = () => {
+      const all = [];
+      for (let [cat, data] of Object.entries(categories)) {
+        data.items.forEach(i => {
+          const missing = Math.max(i.ideal - i.have, 0);
+          if (missing > 0)
+            all.push(`${i.name}: comprar ${missing}`);
+        });
+      }
+      navigator.clipboard.writeText(all.join("\n"));
+    };
 
-document.getElementById("editBtn").onclick = () => {
-  editMode = !editMode;
-  document.body.classList.toggle("edit-mode", editMode);
-};
+    document.getElementById("shareBtn").onclick = () => {
+      const all = [];
+      for (let [cat, data] of Object.entries(categories)) {
+        data.items.forEach(i => {
+          const missing = Math.max(i.ideal - i.have, 0);
+          if (missing > 0)
+            all.push(`${i.name}: comprar ${missing}`);
+        });
+      }
+      const msg = encodeURIComponent(all.join("\n"));
+      window.open(`https://wa.me/?text=${msg}`, "_blank");
+    };
 
-document.getElementById("clearBtn").onclick = () => {
-  confirmModal.style.display = "flex";
-};
-document.getElementById("confirmYes").onclick = () => {
-  list = JSON.parse(JSON.stringify(defaultList));
-  saveList();
-  confirmModal.style.display = "none";
-};
-document.getElementById("confirmNo").onclick = () => {
-  confirmModal.style.display = "none";
-};
-
-document.getElementById("shareBtn").onclick = () => {
-  const text = buildText();
-  const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
-  window.open(url, "_blank");
-};
-document.getElementById("copyBtn").onclick = () => {
-  navigator.clipboard.writeText(buildText());
-};
-
-function buildText() {
-  let t = "🛒 Lista de Compras ARGO:\n\n";
-  Object.entries(list).forEach(([cat, items]) => {
-    t += `📦 ${cat}:\n`;
-    items.forEach(i => {
-      const need = Math.max(i.ideal - (i.have || 0), 0);
-      t += ` - ${i.name}: comprar ${need}\n`;
-    });
-    t += "\n";
-  });
-  return t;
-}
-
-renderList();
-</script>
+    loadData();
+    renderList();
+  </script>
 </body>
 </html>
