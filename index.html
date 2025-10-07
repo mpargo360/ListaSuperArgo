@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lista de Compras - Argo Ingeniería</title>
+<style>
+  body {
+    font-family: system-ui, sans-serif;
+    background: #f9f9f9;
+    margin: 0;
+    padding: 1rem;
+  }
+  h1 {
+    text-align: center;
+    color: #222;
+    margin-bottom: 1rem;
+  }
+  .item {
+    background: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: .75rem;
+    margin-bottom: .5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .name { flex: 2; }
+  .controls {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    justify-content: flex-end;
+  }
+  button {
+    background: #0077ff;
+    color: white;
+    border: none;
+    font-size: 1.2rem;
+    border-radius: 8px;
+    width: 36px;
+    height: 36px;
+  }
+  button:active { background: #005fd1; }
+  .qty { font-size: 1.1rem; margin: 0 8px; width: 30px; text-align: center; }
+  .buy {
+    font-weight: bold;
+    color: #333;
+    text-align: right;
+    min-width: 50px;
+  }
+  .sector {
+    margin-top: 1.5rem;
+    font-weight: bold;
+    color: #444;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 4px;
+  }
+</style>
+</head>
+<body>
+<h1>🛒 Lista de Compras Argo</h1>
+
+<div id="list"></div>
+
+<script>
+const items = [
+  // Heladera
+  { name: "Leche", ideal: 3 },
+  { name: "Manteca", ideal: 1 },
+
+  // Despensa
+  { name: "Azúcar", ideal: 2 },
+  { name: "Sal fina", ideal: 1 },
+  { name: "Sal gruesa", ideal: 1 },
+  { name: "Vinagre", ideal: 1 },
+  { name: "Aceite", ideal: 1 },
+  { name: "Aceite de oliva", ideal: 1 },
+
+  // Aderezos
+  { name: "Mayonesa", ideal: 1 },
+  { name: "Mostaza", ideal: 1 },
+  { name: "Ketchup", ideal: 1 },
+  { name: "Chimichurri", ideal: 1 },
+
+  // Desayuno / galletas
+  { name: "9 de oro agridulce", ideal: 3 },
+  { name: "Galletas surtidas", ideal: 2 },
+  { name: "Galleta de agua", ideal: 3 },
+  { name: "Café instantáneo Dolca", ideal: 2 },
+  { name: "Café molido tostado", ideal: 3 },
+  { name: "Café en cápsula (caja)", ideal: 2 },
+  { name: "Yerba Playadito", ideal: 1 },
+  { name: "Yerba Taragüi", ideal: 1 },
+  { name: "Edulcorante", ideal: 1 },
+  { name: "Té común (100un)", ideal: 1 },
+  { name: "Té boldo (25un)", ideal: 1 },
+  { name: "Té manzanilla (25un)", ideal: 1 },
+  { name: "Mate cocido (25un)", ideal: 1 },
+
+  // Limpieza
+  { name: "Papel de cocina", ideal: 6 },
+  { name: "Papel higiénico", ideal: 12 },
+  { name: "Jabón", ideal: 6 },
+  { name: "Esponja de cocina", ideal: 3 },
+  { name: "Virulana de algodón", ideal: 3 },
+
+  // Otros
+  { name: "Fósforos", ideal: 1 },
+  { name: "Escarbadientes", ideal: 1 },
+];
+
+function loadData() {
+  const saved = localStorage.getItem("listaArgo");
+  return saved ? JSON.parse(saved) : items.map(i => ({ ...i, have: 0 }));
+}
+
+function saveData(data) {
+  localStorage.setItem("listaArgo", JSON.stringify(data));
+}
+
+function render() {
+  const container = document.getElementById("list");
+  container.innerHTML = "";
+  data.forEach((item, idx) => {
+    const buy = Math.max(0, item.ideal - item.have);
+    const div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = `
+      <div class="name">${item.name}</div>
+      <div class="controls">
+        <button onclick="change(${idx}, -1)">−</button>
+        <div class="qty">${item.have}</div>
+        <button onclick="change(${idx}, 1)">+</button>
+        <div class="buy">${buy > 0 ? '🛒'+buy : '✔️'}</div>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function change(index, delta) {
+  data[index].have = Math.max(0, data[index].have + delta);
+  saveData(data);
+  render();
+}
+
+let data = loadData();
+render();
+</script>
+</body>
+</html>
