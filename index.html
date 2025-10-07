@@ -24,7 +24,7 @@
   .icon-btn.big{padding:10px 14px;border-radius:12px;font-weight:600}
   #reset{background:var(--card); color:var(--text); border:1px solid rgba(0,0,0,0.08); padding:10px 12px;border-radius:10px; box-shadow:var(--shadow); cursor:pointer} 
   #editBtn{background:var(--card); color:var(--text); border:1px solid rgba(0,0,0,0.08); box-shadow:var(--shadow);} 
-  #darkToggle{background:transparent;border:1px solid rgba(0,0,0,0.08);padding:6px;border-radius:8px}
+  #darkToggle{background:var(--card); color:var(--text); border:1px solid rgba(0,0,0,0.08); padding:10px 12px;border-radius:10px; box-shadow:var(--shadow); cursor:pointer; font-weight:600;} /* igual tamaño que otros botones */
   #shareBtn{background:var(--card); color:var(--text); border:1px solid rgba(0,0,0,0.08); padding:10px 12px; border-radius:10px; cursor:pointer; box-shadow:var(--shadow);} 
   main{max-width:760px;margin:0 auto; margin-bottom:150px;}  /* margen inferior aumentado para más espacio */
   .sector{margin-top:14px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:10px;padding:8px 2px;border-bottom:1px solid rgba(0,0,0,0.06)}
@@ -319,16 +319,18 @@ themeBtn.addEventListener("click", ()=>{
 });
 applyTheme(localStorage.getItem(THEME_KEY)||'light');
 
+// Compartir en WhatsApp con la estructura pedida
 document.getElementById("shareBtn").addEventListener("click", ()=>{
-  let msg = "";
+  let msg = "🛒 Lista de super ARGO\nRecordar pedir Factura A 🧾\n\n";
   Object.keys(categorias).forEach(cat=>{
     const items = data.filter(d=>d.cat===cat && (Number(d.ideal)-Number(d.have))>0);
     if(items.length===0) return;
-    msg += `"${cat}"\n`;
+    msg += `${cat}\n`;
     items.forEach(it=>{
       const buy = Math.max(0, Number(it.ideal)-Number(it.have));
-      msg += `*"${buy}" ${it.name}\n`;
+      msg += `[${buy}] ${it.name}\n`;
     });
+    msg += "\n";
   });
   const url = `https://wa.me/?text=${encodeURIComponent(msg)}`;
   window.open(url,"_blank");
