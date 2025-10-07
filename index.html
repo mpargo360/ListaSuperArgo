@@ -1,121 +1,128 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lista de Compras ARGO</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Lista de compras ARGO</title>
 <style>
-  body {
-    font-family: system-ui, sans-serif;
-    background: #f9f9f9;
-    margin: 0;
-    padding: 1rem;
+  :root{
+    --bg:#f9f9f9; --card:#fff; --text:#222; --muted:#666; --accent:#0077ff; --danger:#ff5b5b;
+    --shadow: 0 4px 12px rgba(0,0,0,0.08);
   }
-  h1 {
-    text-align: center;
-    color: #222;
-    margin-bottom: 1rem;
+  [data-theme="dark"]{
+    --bg:#0f1113; --card:#111317; --text:#e9eef2; --muted:#9aa3ad; --accent:#4da6ff; --danger:#ff7b7b;
+    --shadow: 0 6px 18px rgba(0,0,0,0.6);
   }
-  .sector {
-    margin-top: 1.5rem;
-    font-weight: bold;
-    color: #444;
-    border-bottom: 2px solid #ddd;
-    padding-bottom: 4px;
-    font-size: 1.1rem;
-  }
-  .item {
-    background: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: .75rem;
-    margin-bottom: .5rem;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-  .name {
-    flex: 2;
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-  }
-  .controls {
-    display: flex;
-    align-items: center;
-    flex: 1;
-    justify-content: flex-end;
-  }
-  button {
-    background: #0077ff;
-    color: white;
-    border: none;
-    font-size: 1.2rem;
-    border-radius: 8px;
-    width: 36px;
-    height: 36px;
-  }
-  button:active { background: #005fd1; }
-  .qty { font-size: 1.1rem; margin: 0 8px; width: 30px; text-align: center; }
-  .buy {
-    font-weight: bold;
-    color: #333;
-    text-align: right;
-    min-width: 50px;
-  }
-  #reset {
-    display: block;
-    margin: 0 auto 1rem;
-    background: #ff5757;
-    color: white;
-    padding: .6rem 1.2rem;
-    border: none;
-    border-radius: 10px;
-    font-size: 1rem;
-  }
-  #tutorial {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .tutorial-box {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 10px;
-    max-width: 320px;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-  }
-  .tutorial-box button {
-    margin-top: 1rem;
-    background: #0077ff;
+
+  html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;}
+  body{background:var(--bg); color:var(--text); padding:14px; -webkit-tap-highlight-color:transparent;}
+  header{display:flex;align-items:center;justify-content:center;gap:12px; flex-direction:column}
+  h1{margin:0;font-size:1.6rem;text-align:center}
+  .topbar{width:100%;display:flex;align-items:center;justify-content:space-between;margin:10px 0 14px;}
+  .top-left{display:flex;align-items:center;gap:8px}
+  .icon-btn{background:var(--card); border-radius:10px; padding:8px; box-shadow:var(--shadow); border:none; cursor:pointer;}
+  .icon-btn.big{padding:10px 14px;border-radius:12px;font-weight:600}
+  #reset{background:var(--danger); color:white; border:none; padding:10px 12px;border-radius:10px; box-shadow:var(--shadow); cursor:pointer}
+  #editBtn{background:var(--accent); color:white}
+  #darkToggle{background:transparent;border:1px solid rgba(0,0,0,0.08);padding:6px;border-radius:8px}
+  main{max-width:760px;margin:0 auto}
+  .sector{margin-top:14px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:10px;padding:8px 2px;border-bottom:1px solid rgba(0,0,0,0.06)}
+  .list{margin-top:8px}
+  .item{display:flex;align-items:center;justify-content:space-between;background:var(--card);padding:10px;border-radius:10px;margin-bottom:8px;box-shadow:var(--shadow)}
+  .left{display:flex;align-items:center;gap:10px;flex:1}
+  .cart-emoji{font-size:1.2rem;margin-right:6px}
+  .name{font-weight:600}
+  .controls{display:flex;align-items:center;gap:8px}
+  .qty{min-width:34px;text-align:center;font-weight:700}
+  .small{font-size:0.85rem;color:var(--muted)}
+  .buy{min-width:46px;text-align:right;font-weight:700}
+  button.small{background:var(--accent);color:#fff;border:none;padding:6px 8px;border-radius:8px;cursor:pointer}
+  button.icon{background:transparent;border:none;font-size:1.15rem;cursor:pointer}
+  .muted{color:var(--muted);font-size:0.88rem}
+  /* Editable styles */
+  .editable { outline: 2px dashed rgba(0,0,0,0.06); padding:2px 6px; border-radius:6px; }
+  /* Modal / tutorial */
+  .overlay{position:fixed; inset:0; display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.45); z-index:50}
+  .box{background:var(--card); color:var(--text); width:calc(100% - 40px); max-width:360px;border-radius:12px;padding:14px; box-shadow:var(--shadow); text-align:center}
+  .box h2{margin:0 0 8px}
+  .box p{margin:6px 0;color:var(--muted)}
+  .box .actions{margin-top:12px;display:flex;gap:10px;justify-content:center}
+  .btn-primary{background:var(--accent);color:white;padding:10px 12px;border-radius:10px;border:none;cursor:pointer}
+  .btn-secondary{background:transparent;border:1px solid rgba(0,0,0,0.08);padding:9px 12px;border-radius:10px;cursor:pointer}
+  /* Add product */
+  #addRow{display:flex;gap:8px;margin:10px 0 0}
+  input[type="text"], input[type="number"]{padding:8px;border-radius:8px;border:1px solid rgba(0,0,0,0.08);flex:1}
+  .trash{color:var(--danger); font-weight:700; cursor:pointer; padding:6px}
+  /* Responsive */
+  @media(min-width:720px){
+    body{padding:28px}
+    h1{font-size:2rem}
   }
 </style>
 </head>
 <body>
-<h1>🛒 Lista de Compras ARGO</h1>
+<header>
+  <h1>🛒 Lista de compras ARGO</h1>
+  <div class="topbar" style="width:100%;max-width:760px">
+    <div class="top-left">
+      <button id="editBtn" class="icon-btn big">✏️ Editar</button>
+      <button id="reset" title="Vaciar lista">🗑 Vaciar lista</button>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button id="darkToggle" class="icon-btn" title="Modo oscuro">🌙</button>
+      <button id="exportBtn" class="icon-btn" title="Exportar/Importar">📤</button>
+    </div>
+  </div>
+</header>
 
-<button id="reset" onclick="resetList()">🗑 Vaciar lista</button>
+<main id="app">
+  <div id="content"></div>
+</main>
 
-<div id="list"></div>
-
-<!-- Tutorial -->
-<div id="tutorial" style="display:none;">
-  <div class="tutorial-box">
+<!-- Tutorial modal -->
+<div id="tutorial" class="overlay" style="display:none">
+  <div class="box" role="dialog" aria-modal="true">
     <h2>👋 Bienvenido</h2>
-    <p>Usá los botones ➕ y ➖ para indicar cuántos productos tenés.</p>
-    <p>La columna “Comprar” te muestra cuántos te faltan según el stock ideal.</p>
-    <button onclick="closeTutorial()">Entendido ✅</button>
+    <p>• Aquí cuentas cuántos productos tenés con ➕ y ➖.</p>
+    <p>• La columna <strong>Comprar</strong> muestra cuánto falta según la cantidad ideal.</p>
+    <div class="actions">
+      <button class="btn-primary" id="gotIt">Entendido</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm modal (custom) -->
+<div id="confirmModal" class="overlay" style="display:none">
+  <div class="box">
+    <h2>⚠️ Confirmar</h2>
+    <p id="confirmText">¿Vaciar toda la lista?</p>
+    <div class="actions">
+      <button class="btn-secondary" onclick="closeConfirm()">Cancelar</button>
+      <button class="btn-primary" onclick="confirmReset()">Aceptar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add item modal -->
+<div id="addModal" class="overlay" style="display:none">
+  <div class="box">
+    <h2>➕ Agregar producto</h2>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+      <input id="newName" type="text" placeholder="Nombre del producto">
+      <input id="newIdeal" type="number" placeholder="Cantidad ideal (ej: 2)" min="0">
+      <select id="newCat">
+        <!-- categories injected by JS -->
+      </select>
+    </div>
+    <div class="actions" style="margin-top:12px">
+      <button class="btn-secondary" onclick="closeAdd()">Cancelar</button>
+      <button class="btn-primary" onclick="addProduct()">Agregar</button>
+    </div>
   </div>
 </div>
 
 <script>
+/* ---------- Datos iniciales (categorías y productos) ---------- */
 const categorias = {
   "🥛 Heladera": [
     { name: "Leche", ideal: 3 },
@@ -163,68 +170,225 @@ const categorias = {
   ],
 };
 
-function loadData() {
-  const saved = localStorage.getItem("listaArgo");
-  return saved ? JSON.parse(saved) : initData();
+const STORAGE_KEY = "listaArgo_v2";
+const THEME_KEY = "argoTheme_v2";
+const TUTORIAL_KEY = "argoTutorialSeen_v2";
+
+/* ---------- Utilidades de almacenamiento ---------- */
+function saveData(arr){ localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
+function loadData(){
+  const s = localStorage.getItem(STORAGE_KEY);
+  if(!s){
+    // inicializar a partir de categorias
+    const arr = [];
+    Object.keys(categorias).forEach(cat=>{
+      categorias[cat].forEach(it=>{
+        arr.push({...it, have:0, cat});
+      });
+    });
+    saveData(arr);
+    return arr;
+  }
+  try { return JSON.parse(s); } catch(e){ localStorage.removeItem(STORAGE_KEY); return loadData(); }
 }
-function initData() {
-  const arr = [];
-  for (const cat in categorias)
-    categorias[cat].forEach(i => arr.push({ ...i, have: 0, cat }));
-  return arr;
-}
-function saveData(data) {
-  localStorage.setItem("listaArgo", JSON.stringify(data));
-}
-function render() {
-  const container = document.getElementById("list");
-  container.innerHTML = "";
-  for (const cat in categorias) {
+
+/* ---------- Estado ---------- */
+let data = loadData();
+let editMode = false;
+
+/* ---------- Render ---------- */
+function render(){
+  const root = document.getElementById("content");
+  root.innerHTML = "";
+  Object.keys(categorias).forEach(cat=>{
     const sector = document.createElement("div");
     sector.className = "sector";
     sector.textContent = cat;
-    container.appendChild(sector);
-    data.filter(i => i.cat === cat).forEach((item, idx) => {
-      const buy = Math.max(0, item.ideal - item.have);
-      const div = document.createElement("div");
-      div.className = "item";
-      div.innerHTML = `
-        <div class="name">🛒 ${item.name}</div>
+    root.appendChild(sector);
+
+    const listDiv = document.createElement("div");
+    listDiv.className = "list";
+    const items = data.filter(d=>d.cat===cat);
+    items.forEach((item, idx)=> {
+      const globalIndex = data.indexOf(item);
+      const buy = Math.max(0, (Number(item.ideal)||0) - (Number(item.have)||0));
+      const itemDiv = document.createElement("div");
+      itemDiv.className = "item";
+      itemDiv.innerHTML = `
+        <div class="left">
+          <div class="cart-emoji">🛒</div>
+          <div style="display:flex;flex-direction:column">
+            <div class="name" ${editMode ? 'contenteditable="true" data-field="name" data-idx="'+globalIndex+'"' : ''}>${escapeHtml(item.name)}</div>
+            <div class="small muted">Ideal: <span ${editMode ? 'contenteditable="true" data-field="ideal" data-idx="'+globalIndex+'"' : ''}>${escapeHtml(String(item.ideal))}</span></div>
+          </div>
+        </div>
         <div class="controls">
-          <button onclick="change(${idx}, -1)">−</button>
-          <div class="qty">${item.have}</div>
-          <button onclick="change(${idx}, 1)">+</button>
-          <div class="buy">${buy > 0 ? buy : '✔️'}</div>
-        </div>`;
-      container.appendChild(div);
+          <button class="small" onclick="decrement(${globalIndex})">−</button>
+          <div class="qty">${escapeHtml(String(item.have))}</div>
+          <button class="small" onclick="increment(${globalIndex})">+</button>
+          <div class="buy">${buy>0?buy:'✔️'}</div>
+          ${editMode ? '<div class="trash" title="Eliminar" onclick="removeItem('+globalIndex+')">✖</div>' : ''}
+        </div>
+      `;
+      listDiv.appendChild(itemDiv);
+      // attach edit listeners if editMode
+      if(editMode){
+        // name and ideal fields are contenteditable: listen on input/blur
+        const nameEl = itemDiv.querySelector('[data-field="name"]');
+        const idealEl = itemDiv.querySelector('[data-field="ideal"]');
+        if(nameEl){
+          nameEl.classList.add('editable');
+          nameEl.addEventListener('input', e=>{
+            const i = Number(nameEl.dataset.idx);
+            data[i].name = nameEl.innerText.trim();
+            saveData(data);
+          });
+        }
+        if(idealEl){
+          idealEl.classList.add('editable');
+          idealEl.addEventListener('input', e=>{
+            const i = Number(idealEl.dataset.idx);
+            let v = idealEl.innerText.replace(/[^0-9]/g,'');
+            if(v==='') v='0';
+            data[i].ideal = Number(v);
+            idealEl.innerText = v;
+            saveData(data);
+          });
+        }
+      }
+    });
+    root.appendChild(listDiv);
+  });
+
+  // show add product controls if editMode
+  if(editMode){
+    const addBar = document.createElement("div");
+    addBar.id = "addRow";
+    addBar.innerHTML = `
+      <input id="addName" type="text" placeholder="Nuevo producto (ej: Azúcar)">
+      <input id="addIdeal" type="number" min="0" placeholder="Ideal">
+      <select id="addCat"></select>
+      <button class="btn-primary" id="addBtn">Agregar</button>
+    `;
+    root.appendChild(addBar);
+    // populate categories select
+    const sel = document.getElementById("addCat");
+    sel.innerHTML = "";
+    Object.keys(categorias).forEach(c=> sel.innerHTML += `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`);
+    document.getElementById("addBtn").addEventListener("click", ()=>{
+      const name = document.getElementById("addName").value.trim();
+      const ideal = Number(document.getElementById("addIdeal").value) || 0;
+      const cat = document.getElementById("addCat").value || Object.keys(categorias)[0];
+      if(!name) { alert("Ingresá nombre del producto."); return; }
+      data.push({name, ideal, have:0, cat});
+      saveData(data); render();
     });
   }
 }
-function change(index, delta) {
-  data[index].have = Math.max(0, data[index].have + delta);
+
+/* ---------- helpers ---------- */
+function escapeHtml(s){ return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+
+function increment(i){ data[i].have = (Number(data[i].have)||0) + 1; saveData(data); render(); }
+function decrement(i){ data[i].have = Math.max(0, (Number(data[i].have)||0) - 1); saveData(data); render(); }
+function removeItem(i){ if(confirm("Eliminar producto?")){ data.splice(i,1); saveData(data); render(); } }
+
+/* ---------- Edit mode toggle ---------- */
+document.getElementById("editBtn").addEventListener("click", ()=>{
+  editMode = !editMode;
+  document.getElementById("editBtn").textContent = editMode ? "💾 Salir edición" : "✏️ Editar";
+  render();
+});
+
+/* ---------- Reset / confirm modal custom ---------- */
+document.getElementById("reset").addEventListener("click", ()=>{
+  showConfirm("¿Vaciar toda la lista?");
+});
+function showConfirm(text){
+  document.getElementById("confirmText").innerText = text;
+  document.getElementById("confirmModal").style.display = "flex";
+}
+function closeConfirm(){ document.getElementById("confirmModal").style.display = "none"; }
+function confirmReset(){
+  data.forEach(it=> it.have = 0);
   saveData(data);
   render();
+  closeConfirm();
 }
-function resetList() {
-  if (confirm("¿Vaciar toda la lista?")) {
-    data.forEach(i => i.have = 0);
-    saveData(data);
-    render();
-  }
-}
-function showTutorial() {
-  if (!localStorage.getItem("argoTutorialSeen")) {
+
+/* ---------- Tutorial ---------- */
+function showTutorialIfNeeded(){
+  if(!localStorage.getItem(TUTORIAL_KEY)){
     document.getElementById("tutorial").style.display = "flex";
   }
 }
-function closeTutorial() {
-  localStorage.setItem("argoTutorialSeen", "true");
+document.getElementById("gotIt").addEventListener("click", ()=>{
+  localStorage.setItem(TUTORIAL_KEY, "1");
   document.getElementById("tutorial").style.display = "none";
+});
+
+/* ---------- Dark mode toggle ---------- */
+const themeBtn = document.getElementById("darkToggle");
+function applyTheme(t){
+  if(t==='dark'){ document.documentElement.setAttribute('data-theme','dark'); themeBtn.textContent='🌙'; }
+  else { document.documentElement.removeAttribute('data-theme'); themeBtn.textContent='🌙'; }
+}
+themeBtn.addEventListener("click", ()=>{
+  const cur = localStorage.getItem(THEME_KEY) || 'light';
+  const nxt = cur==='light' ? 'dark' : 'light';
+  localStorage.setItem(THEME_KEY, nxt);
+  applyTheme(nxt);
+});
+(function initTheme(){
+  const t = localStorage.getItem(THEME_KEY) || 'light';
+  applyTheme(t);
+})();
+
+/* ---------- Export / Import JSON (small utility) ---------- */
+document.getElementById("exportBtn").addEventListener("click", ()=>{
+  const action = prompt("Escribe 'export' para descargar JSON, 'import' para pegar JSON y reemplazar:");
+  if(!action) return;
+  if(action.toLowerCase()==='export'){
+    const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'listaArgo.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  } else if(action.toLowerCase()==='import'){
+    const txt = prompt("Pega aquí el JSON para importar (sobrescribe datos actuales):");
+    try{
+      const parsed = JSON.parse(txt);
+      if(Array.isArray(parsed)){ data = parsed; saveData(data); render(); alert("Importado!"); }
+      else alert("JSON inválido.");
+    }catch(e){ alert("JSON inválido."); }
+  }
+});
+
+/* ---------- Add modal (alternate) ---------- */
+function openAddModal(){ document.getElementById("addModal").style.display="flex"; }
+function closeAdd(){ document.getElementById("addModal").style.display="none"; }
+function addProduct(){
+  const name = document.getElementById("newName").value.trim();
+  const ideal = Number(document.getElementById("newIdeal").value) || 0;
+  const cat = document.getElementById("newCat").value || Object.keys(categorias)[0];
+  if(!name){ alert("Ingresá nombre"); return; }
+  data.push({name, ideal, have:0, cat});
+  saveData(data); render(); closeAdd();
 }
 
-let data = loadData();
+/* ---------- initialize add modal category options ---------- */
+(function populateAddModalCats(){
+  const sel = document.getElementById("newCat");
+  Object.keys(categorias).forEach(c => sel.innerHTML += `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`);
+})();
+
+/* ---------- init ---------- */
 render();
-showTutorial();
+showTutorialIfNeeded();
+
+/* save on unload just in case */
+window.addEventListener('beforeunload', ()=> saveData(data));
 </script>
 </body>
 </html>
